@@ -85,8 +85,25 @@ def stations():
 
     ###put them in a list (serializable?)
 
-    result = [r[0] for r in stations_query]
-    return result
+    result_stations = [r[0] for r in stations_query]
+    return result_stations
+
+# TOBS route:
+# Query the dates and temperature observations of the most active station for the last year of data.
+# Return a JSON list of temperature observations (TOBS) for the previous year.
+
+@app.route("/api/v1.0/tobs")
+def tobs():
+    #get dates and temp for prior year
+    prior_year = dt.date(2017, 8, 23 - dt.timedelta(days=365)
+
+    tobs_query = session.query(measurement.tobs).filter(measurement.station == "USC00519281") \
+            .filter(measurement.date >= prior_year).all()
+
+    
+    #Return results as a list
+    result_tobs = [r[3] for r in tobs_query]
+    return result_tobs
 
 
 
