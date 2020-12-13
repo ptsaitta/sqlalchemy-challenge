@@ -57,6 +57,7 @@ def home():
         "/api/v1.0/stations"
         "/api/v1.0/tobs"
         "/api/v1.0/temp/start/end"
+        
     )
 
 
@@ -105,5 +106,24 @@ def tobs():
     result_tobs = [r[3] for r in tobs_query]
     return result_tobs
 
+
+# Start/End temp Route
+# Return a JSON list of the minimum temperature, the average temperature, and the max temperature for a given start or start-end range.
+# When given the start only, calculate TMIN, TAVG, and TMAX for all dates greater than and equal to the start date.
+# When given the start and the end date, calculate the TMIN, TAVG, and TMAX for dates between the start and end date inclusive.
+
+@app.route("/api/v1.0/temp/<start>") # no defined end date - goes to presenet date
+@app.route("/api/v1.0/temp/<start>/<end>") # start and end date
+def temp_data():
+    
+    ##No end date specified:
+    
+    temps_query = session.query(func.min(measurement.tobs), func.max(measurement.tobs), func.avg(measurement.tobs))
+    temps_query.filter(measurement.date >= start).all()
+
+    #put in list
+
+    result_temps_start_only = [r[0:2] for r in temps_query]
+    return result_temps_start_only
 
 
