@@ -74,3 +74,19 @@ def precipitation():
     #return JSON representation
     precipitation_dict = {date: prcp for date, prcp in precipitation}
     return jsonify(precipitation_dict)
+
+# Stations route:
+# Return a JSON list of stations from the dataset.
+
+@app.route("/api/v1.0/stations")
+def stations():
+    ###get stations
+    stations_query = session.query(station.station).all()
+
+    ###put them in a list (serializable?)
+
+    result = [r[0] for r in stations_query]
+    return result
+
+
+
