@@ -45,3 +45,32 @@ app = Flask(__name__)
 ###
 ###Make routes
 ###
+
+#first route is '/', the home page. List all routes available.
+
+@app.route("/")
+def home():
+    return (
+        "This webpage is dedicated to Analysis of the Hawaiian Climate"
+        "There are several pages for you to visit:"
+        "/api/v1.0/precipitation"
+        "/api/v1.0/stations"
+        "/api/v1.0/tobs"
+        "/api/v1.0/temp/start/end"
+    )
+
+
+# Precipitation route:
+# Convert the query results to a dictionary using date as the key and prcp as the value.
+# Return the JSON representation of your dictionary
+
+@app.route("/api/v1.0/precipitation")
+def precipitation():
+    prior_year = dt.date(2017, 8, 23 - dt.timedelta(days=365)
+
+    search = session.query(measurement.date, measurement.prcp)
+    results_prior_year = search.filter(measurement.date >= prior_year)
+
+    #return JSON representation
+    precipitation_dict = {date: prcp for date, prcp in precipitation}
+    return jsonify(precipitation_dict)
