@@ -114,16 +114,26 @@ def tobs():
 
 @app.route("/api/v1.0/temp/<start>") # no defined end date - goes to presenet date
 @app.route("/api/v1.0/temp/<start>/<end>") # start and end date
-def temp_data():
+def temp_data(start=none, end=none):
     
     ##No end date specified:
-    
-    temps_query = session.query(func.min(measurement.tobs), func.max(measurement.tobs), func.avg(measurement.tobs))
-    temps_query.filter(measurement.date >= start).all()
+    if not end:
+
+        temps_start_query = session.query(func.min(measurement.tobs), func.max(measurement.tobs), func.avg(measurement.tobs))
+        temps_start_query.filter(measurement.date >= start).all()
 
     #put in list
 
-    result_temps_start_only = [r[0:2] for r in temps_query]
-    return result_temps_start_only
+        result_temps_start_only = [r[0:2] for r in temps_start_query]
+        return result_temps_start_only
 
+    ##Start and end date specified:
+    temps_range_query = session.query(func.min(measurement.tobs), func.max(measurement.tobs), func.avg(measurement.tobs))
+    temps_range_query.filter(measurement.date >= start).filter(measurement.date >= end).all()
 
+    #put in list
+    result_temps_range = [r[0:2] for r in temps_range_query]
+    return result_temps_range
+
+if __name__ = "__main__":
+    app.run()
